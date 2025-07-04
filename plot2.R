@@ -1,0 +1,11 @@
+data<-read.table("household_power_consumption.txt",nrows = 2075259,sep=";",header=TRUE,na.strings = "?")
+library(lubridate)
+data$Date<-dmy(data$Date)
+data$Time<-hms(data$Time)
+data$DateTime <- data$Date + data$Time
+twodays<-subset(data,Date=="2007-02-01"|Date=="2007-02-02")
+png(filename = "plot2.png", width = 480, height = 480)
+with(twodays,plot(DateTime,Global_active_power,type="l",xlab="",ylab = "Global Active Power (kilowatts)",xaxt="n"))
+ticks <- as.POSIXct(c("2007-02-01", "2007-02-02", "2007-02-03"))
+axis(1,labels = weekdays(ticks,abbreviate = TRUE),at=ticks)
+dev.off()

@@ -1,0 +1,27 @@
+data<-read.table("household_power_consumption.txt",nrows = 2075259,sep=";",header=TRUE,na.strings = "?")
+library(lubridate)
+data$Date<-dmy(data$Date)
+data$Time<-hms(data$Time)
+twodays<-subset(data,Date=="2007-02-01"|Date=="2007-02-02")
+png(filename = "plot4.png", width = 480, height = 480)
+par(mfcol = c(2, 2),mar = c(5, 4, 4, 1))
+##Plot 1
+with(twodays,plot(DateTime,Global_active_power,type="l",xlab="",ylab = "Global Active Power",xaxt="n",cex.lab = 0.8))
+ticks <- as.POSIXct(c("2007-02-01", "2007-02-02", "2007-02-03"))
+axis(1,labels = weekdays(ticks,abbreviate = TRUE),at=ticks)
+##Plot 2
+with(twodays,plot(DateTime,Sub_metering_1,type="l",xlab="",ylab = "Energy sub metering",xaxt="n",cex.lab = 0.8))
+ticks <- as.POSIXct(c("2007-02-01", "2007-02-02", "2007-02-03"))
+axis(1,labels = weekdays(ticks,abbreviate = TRUE),at=ticks)
+with(twodays,lines(DateTime,Sub_metering_2,col="red"))
+with(twodays,lines(DateTime,Sub_metering_3,col="blue"))
+legend("topright", lty = 1, col = c("black","blue", "red"), legend = c("Sub_metering_1", "Sub_metering_2","Sub_metering_3"))
+##Plot 3
+with(twodays,plot(DateTime,Voltage,type="l",xlab="datetime",ylab = "Voltage",xaxt="n",cex.lab = 0.8))
+ticks <- as.POSIXct(c("2007-02-01", "2007-02-02", "2007-02-03"))
+axis(1,labels = weekdays(ticks,abbreviate = TRUE),at=ticks)
+##Plot 4
+with(twodays,plot(DateTime,Global_reactive_power,type="l",xlab="datetime",ylab = "Global_reactive_power",xaxt="n",cex.lab = 0.8))
+ticks <- as.POSIXct(c("2007-02-01", "2007-02-02", "2007-02-03"))
+axis(1,labels = weekdays(ticks,abbreviate = TRUE),at=ticks)
+dev.off()
